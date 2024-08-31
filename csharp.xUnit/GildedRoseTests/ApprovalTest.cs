@@ -7,6 +7,7 @@ using VerifyXunit;
 using Xunit;
 using GildedRoseKata;
 using System.Collections.Generic;
+using FluentAssertions;
 
 namespace GildedRoseTests;
 
@@ -26,6 +27,18 @@ public class ApprovalTest
         var output = fakeoutput.ToString();
 
         return Verifier.Verify(output);
+    }
+    //TODO: make conjured item unit test and move logic to separete file for conjured item file / services
+    [Fact]
+    public void EnsureConjuredItemsQualityDoesNotGoNegative()
+    {
+        //arrange
+        List<Item> Items = [new Item { Name = "Conjured Mana Cake", SellIn = 0, Quality = 0 }];
+        //act
+        GildedRose app = new GildedRose(Items);
+        app.UpdateQuality();
+        //assert
+        Items[0].Quality.Should().Be(0);
     }
     [Fact]
     public void IsSpecialItem_ShouldReturnFalseForNonSpecialItems()

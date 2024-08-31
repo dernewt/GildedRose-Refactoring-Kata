@@ -28,4 +28,42 @@ public class GildedRoseTest
         Items[0].Quality.Should().Be(0);
         Items[0].SellIn.Should().Be(0);
     }
+    //private void UpdateConjuredItem(Item item)
+    //{
+    //    item.Quality -= item.SellIn > 0 ? 2 : 4;
+    //}
+    [Fact]
+    private void UpdateConjuredItemWithQualityGreaterThanZero()
+    {
+        //arrange
+        List<Item> Items = [new Item { Name = "Conjured Mana Cake", SellIn = 1, Quality = 2 }];
+        //act
+        GildedRose app = new GildedRose(Items);
+        app.UpdateQuality();
+        //assert
+        Items[0].Quality.Should().Be(0);
+    }
+    [Fact]
+    private void UpdateConjuredItemWithQualityEqualsZero()
+    {
+        //arrange
+        List<Item> Items = [new Item { Name = "Conjured Mana Cake", SellIn = 0, Quality = 4 }];
+        //act
+        GildedRose app = new GildedRose(Items);
+        app.UpdateQuality();
+        //assert
+        Items[0].Quality.Should().Be(0);
+    }
+
+    [Fact]
+    private void EnsureConjuredItemDecrements()
+    {
+        //arrange
+        List<Item> Items = [new Item { Name = "Conjured Mana Cake", SellIn = 0, Quality = 4 }];
+        //act
+        GildedRose app = new GildedRose(Items);
+        app.UpdateQuality();
+        //assert
+        Items[0].SellIn.Should().Be(-1);
+    }
 }
