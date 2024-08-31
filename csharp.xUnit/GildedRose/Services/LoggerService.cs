@@ -3,8 +3,12 @@ using System.Collections.Generic;
 
 namespace GildedRoseKata.Services;
 
-public class Logger
+public class LoggerService
 {
+    public static void LogStart()
+    {
+        Console.WriteLine("OMGHAI!");
+    }
     public static void LogDay(int day)
     {
         Console.WriteLine($"-------- day {day} --------");
@@ -18,10 +22,5 @@ public class Logger
             Console.WriteLine(items[j].Name + ", " + items[j].SellIn + ", " + items[j].Quality);
         }
         Console.WriteLine("");
-    }
-
-    public static void LogStart()
-    {
-        Console.WriteLine("OMGHAI!");
     }
 }

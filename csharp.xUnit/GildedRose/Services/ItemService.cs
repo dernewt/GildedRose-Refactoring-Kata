@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace GildedRoseKata.Services;
 
@@ -29,7 +30,11 @@ public class ItemService
             SellIn = 5,
             Quality = 49
         },
-        // this conjured item does not work properly yet
         new Item {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
     ];
+    public static bool IsSpecialItem(string itemName)
+    {
+        string[] specialItems = { "Aged Brie", "Backstage passes to a TAFKAL80ETC concert", "Sulfuras, Hand of Ragnaros", "Conjured Mana Cake" };
+        return specialItems.Contains(itemName);
+    }
 }

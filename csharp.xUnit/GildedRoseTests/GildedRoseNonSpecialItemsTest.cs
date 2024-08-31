@@ -5,7 +5,7 @@ using FluentAssertions;
 
 namespace GildedRoseTests;
 
-public class GildedRoseTest
+public class GildedRoseNonSpecialItemsTest
 {
     [Fact]
     public void GenericItemWithZerosUpdated()
