@@ -19,7 +19,6 @@ public class GildedRose
     private void UpdateConjuredItem(Item item)
     {
         item.Quality -= item.SellIn > 0 ? 2 : 4;
-        item.SellIn -= 1;
         if (item.Quality <= 0)
         {
             item.Quality = 0;
@@ -27,6 +26,7 @@ public class GildedRose
     }
     private void IncreaseQualityBackStagePass(Item item)
     {
+
         if (item.SellIn < 11 && item.Quality < 50)
         {
             item.Quality = item.Quality + 1;
@@ -38,17 +38,22 @@ public class GildedRose
 
     }
 
-    public void UpdateQualityNonSpecialItems(Item item)
+    private void UpdateQualityNonSpecialItem(Item item)
     {
+
         if (item.Quality > 0)
         {
             item.Quality -= 1;
         }
-
+        item.SellIn = item.SellIn - 1;
+        if (item.SellIn < 0 && item.Quality > 0)
+        {
+            item.Quality = item.Quality - 1;
+        }
     }
-    public void UpdateQualityLessThan50AndSpecialItems(Item item)
+    private void UpdateQualitySpecialItem(Item item)
     {
-        if (item.Quality < 50)
+        if (item.Quality < 50 && !item.Name.StartsWith("Conjured"))
         {
             item.Quality = item.Quality + 1;
 
@@ -60,40 +65,42 @@ public class GildedRose
             {
                 item.Quality = item.Quality + 1;
             }
+            if (item.SellIn < 0)
+            {
+                if (item.Quality > 0 && !ItemService.IsSpecialItem(item.Name))
+                {
+                    item.Quality = item.Quality - 1;
+                }
+            }
 
+        }
+        else if (item.Name.StartsWith("Conjured"))
+        {
+            UpdateConjuredItem(item);
         }
         if (item.Name == "Backstage passes to a TAFKAL80ETC concert" && item.SellIn <= 0)
         {
             item.Quality = item.Quality - item.Quality;
         }
 
-    }
-
-
-
-    public void updateIndividualItemQuality(Item item)
-    {
-        if (!ItemService.IsSpecialItem(item.Name))
-        {
-            UpdateQualityNonSpecialItems(item);
-        }
-        else
-        {
-            UpdateQualityLessThan50AndSpecialItems(item);
-        }
         if (item.Name != "Sulfuras, Hand of Ragnaros")
         {
             item.SellIn = item.SellIn - 1;
         }
 
+    }
 
-        //To Do: think about refactoried aged brie into increased quanity
-        if (item.SellIn < 0)
+
+
+    private void UpdateQualityIndividualItem(Item item)
+    {
+        if (!ItemService.IsSpecialItem(item.Name))
         {
-            if (item.Quality > 0 && !ItemService.IsSpecialItem(item.Name))
-            {
-                item.Quality = item.Quality - 1;
-            }
+            UpdateQualityNonSpecialItem(item);
+        }
+        else
+        {
+            UpdateQualitySpecialItem(item);
         }
 
     }
@@ -102,12 +109,7 @@ public class GildedRose
     {
         for (var i = 0; i < Items.Count; i++)
         {
-            if (Items[i].Name.StartsWith("Conjured"))
-            {
-                UpdateConjuredItem(Items[i]);
-                continue;
-            }
-            updateIndividualItemQuality(Items[i]);
+            UpdateQualityIndividualItem(Items[i]);
         }
     }
 }

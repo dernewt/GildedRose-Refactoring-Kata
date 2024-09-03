@@ -13,7 +13,7 @@ namespace GildedRoseTests
         public void IsSpecialItem_ShouldReturnFalseForNonSpecialItems()
         {
             Assert.False(ItemService.IsSpecialItem("Normal Item"));
-            Assert.False(ItemService.IsSpecialItem("Conjured Mana Cake"));
+            Assert.False(ItemService.IsSpecialItem("Test Mana Cake"));
         }
         [Fact]
         public void IsSpecialItem_ShouldReturnTrueForSpecialItems()
