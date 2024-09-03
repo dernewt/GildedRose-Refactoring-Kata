@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GildedRoseKata.Services;
 
-public class Logger
+public class LoggerService
 {
     public static void LogDay(int day)
     {

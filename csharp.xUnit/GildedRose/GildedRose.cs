@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GildedRoseKata.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
@@ -15,12 +16,6 @@ public class GildedRose
         this.Items = Items;
     }
 
-    public string[] specialItems = { "Aged Brie", "Backstage passes to a TAFKAL80ETC concert", "Sulfuras, Hand of Ragnaros", "Conjured" };
-
-    public bool IsSpecialItem(string itemName)
-    {
-        return specialItems.Contains(itemName);
-    }
     private void UpdateConjuredItem(Item item)
     {
         item.Quality -= item.SellIn > 0 ? 2 : 4;
@@ -30,6 +25,18 @@ public class GildedRose
             item.Quality = 0;
         }
     }
+    private void IncreaseQualityBackStagePass(Item item)
+    {
+        if (item.SellIn < 11 && item.Quality < 50)
+        {
+            item.Quality = item.Quality + 1;
+        }
+        if (item.SellIn < 6 && item.Quality < 50)
+        {
+            item.Quality = item.Quality + 1;
+        }
+
+    }
     public void IncreaseQuantity(Item item)
     {
         if (item.Quality < 50)
@@ -38,26 +45,46 @@ public class GildedRose
 
             if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
             {
-                if (item.SellIn < 11)
-                {
-                    if (item.Quality < 50)
-                    {
-                        item.Quality = item.Quality + 1;
-                    }
-                }
-
-                if (item.SellIn < 6)
-                {
-                    if (item.Quality < 50)
-                    {
-                        item.Quality = item.Quality + 1;
-                    }
-                }
+                IncreaseQualityBackStagePass(item);
             }
 
         }
     }
 
+    public void updateIndividualItemQuality(Item item)
+    {
+        if (item.Quality > 0 && !ItemService.IsSpecialItem(item.Name))
+        {
+            item.Quality -= 1;
+        }
+        else
+        {
+            IncreaseQuantity(item);
+        }
+
+        if (item.Name != "Sulfuras, Hand of Ragnaros")
+        {
+            item.SellIn = item.SellIn - 1;
+        }
+        //To Do: think about refactoried aged brie into increased quanity
+        if (item.SellIn < 0)
+        {
+            if (item.Name == "Aged Brie" && item.Quality < 50)
+            {
+                item.Quality = item.Quality + 1;
+            }
+            else if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
+            {
+                item.Quality = item.Quality - item.Quality;
+            }
+
+            else if (item.Quality > 0 && !ItemService.IsSpecialItem(item.Name))
+            {
+                item.Quality = item.Quality - 1;
+            }
+        }
+
+    }
 
     public void UpdateQuality()
     {
@@ -68,37 +95,7 @@ public class GildedRose
                 UpdateConjuredItem(Items[i]);
                 continue;
             }
-            
-                if (Items[i].Quality > 0 && !IsSpecialItem(Items[i].Name) )
-                {
-                Items[i].Quality = Items[i].Quality - 1;
-                }
-                else
-                {
-                    IncreaseQuantity(Items[i]);
-                }
-
-                if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
-                {
-                    Items[i].SellIn = Items[i].SellIn - 1;
-                }
-
-                if (Items[i].SellIn < 0)
-                {
-                    if (Items[i].Name == "Aged Brie" && Items[i].Quality < 50) {
-                        Items[i].Quality = Items[i].Quality + 1;
-                    }
-                   else if (Items[i].Name == "Backstage passes to a TAFKAL80ETC concert") {
-                        Items[i].Quality = Items[i].Quality - Items[i].Quality;
-                    }
-
-                    else if (Items[i].Quality > 0 && !IsSpecialItem(Items[i].Name))
-                    {   
-                        Items[i].Quality = Items[i].Quality - 1;
-                    }
-                }
+            updateIndividualItemQuality(Items[i]);
         }
     }
-
-  
 }

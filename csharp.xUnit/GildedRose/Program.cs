@@ -1,7 +1,7 @@
 ﻿using GildedRoseKata;
 using GildedRoseKata.Services;
 
-Logger.LogStart();
+LoggerService.LogStart();
 
 var items = ItemService.Fetch();
 
@@ -11,7 +11,7 @@ var days = ProgramHelper.ParseArgs(args);
 
 for (var i = 0; i <= days; i++)
 {
-    Logger.LogDay(i);
-    Logger.LogItems(items);
+    LoggerService.LogDay(i);
+    LoggerService.LogItems(items);
     app.UpdateQuality();
 }
