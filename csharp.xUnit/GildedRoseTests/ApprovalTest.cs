@@ -1,13 +1,5 @@
-﻿using GildedRoseKata;
-
-using System;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-
-using VerifyXunit;
-
-using Xunit;
+﻿using System.Text;
+using System.Reflection;
 
 namespace GildedRoseTests;
 
@@ -16,13 +8,32 @@ public class ApprovalTest
     [Fact]
     public Task ThirtyDays()
     {
-        var fakeoutput = new StringBuilder();
-        Console.SetOut(new StringWriter(fakeoutput));
+        int daysToRun = 30;
+
         Console.SetIn(new StringReader($"a{Environment.NewLine}"));
 
-        Program.Main(new string[] { "30" });
-        var output = fakeoutput.ToString();
+        var capturedOutput = new StringBuilder();
+        Console.SetOut(new StringWriter(capturedOutput));
 
-        return Verifier.Verify(output);
+        object[] daysToRunArgs = [new[] { daysToRun.ToString() }];
+        Assembly.GetAssembly(typeof(GildedRose))?.EntryPoint
+            ?.Invoke(this, daysToRunArgs);
+
+        return Verify(capturedOutput);
+    }
+
+    [Fact]
+    public Task NoDaysPassed()
+    {
+        Console.SetIn(new StringReader($"a{Environment.NewLine}"));
+
+        var capturedOutput = new StringBuilder();
+        Console.SetOut(new StringWriter(capturedOutput));
+
+        object[] emptyArgs = [Array.Empty<string>()];
+        Assembly.GetAssembly(typeof(GildedRose))?.EntryPoint
+            ?.Invoke(this, emptyArgs);
+
+        return Verify(capturedOutput);
     }
 }

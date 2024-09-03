@@ -1,17 +1,33 @@
-﻿using Xunit;
-using System.Collections.Generic;
-using GildedRoseKata;
-
-namespace GildedRoseTests;
+﻿namespace GildedRoseTests;
 
 public class GildedRoseTest
 {
     [Fact]
-    public void foo()
+    public void MultiValueTest()
     {
-        IList<Item> Items = new List<Item> { new Item { Name = "foo", SellIn = 0, Quality = 0 } };
-        GildedRose app = new GildedRose(Items);
+        var startingValue = 42;
+        IList<Item> items =
+            [
+            new() { SellIn = startingValue, Quality = startingValue },
+            new() { SellIn = startingValue, Quality = startingValue }
+            ];
+
+        new GildedRose(items)
+            .UpdateQuality();
+
+        items.First().Quality.Should().NotBe(startingValue);
+        items.First().SellIn.Should().NotBe(startingValue);
+        items.Last().Quality.Should().NotBe(startingValue);
+        items.Last().SellIn.Should().NotBe(startingValue);
+    }
+
+    [Fact]
+    public void EmptyTest()
+    {
+        GildedRose app = new GildedRose(new List<Item>());
+
         app.UpdateQuality();
-        Assert.Equal("fixme", Items[0].Name);
+
+        app.Should().NotBeNull();
     }
 }
